@@ -1,12 +1,52 @@
-Nik
-adhaiguw w
- ld OJW
- J
-dJ w;
-arj oj;lj 
-OJD W:L
-AJ:L
- wA 
-u9upo
-doau
-op
+# Super realistische rekenmachine met Chinese getallen
+
+CHINESE_NUMS = {
+    "零": 0, "一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
+    "六": 6, "七": 7, "八": 8, "九": 9, "十": 10
+}
+
+def chinese_to_int(chinese_num):
+    if chinese_num == "十":
+        return 10
+    if "十" in chinese_num:
+        parts = chinese_num.split("十")
+        tens = CHINESE_NUMS.get(parts[0], 1) if parts[0] != '' else 1
+        units = CHINESE_NUMS.get(parts[1], 0) if len(parts) > 1 and parts[1] != '' else 0
+        return tens * 10 + units
+    return CHINESE_NUMS.get(chinese_num, 0)
+
+def int_to_chinese(num):
+    if num == 0:
+        return "零"
+    if num < 10:
+        return list(CHINESE_NUMS.keys())[num]
+    tens = num // 10
+    units = num % 10
+    prefix = "十" if tens == 1 else list(CHINESE_NUMS.keys())[tens] + "十"
+    return prefix if units == 0 else prefix + list(CHINESE_NUMS.keys())[units]
+
+def bereken(operator, a_ch, b_ch):
+    a = chinese_to_int(a_ch)
+    b = chinese_to_int(b_ch)
+    if operator == '+':
+        result = a + b
+    elif operator == '-':
+        result = a - b
+    elif operator == '*':
+        result = a * b
+    elif operator == '/':
+        if b == 0:
+            return "除零错误"
+        result = a // b
+    else:
+        return "Onbekende operator"
+    return int_to_chinese(result)
+
+print("Voer eerste getal in (Chinees):")
+a_ch = input().strip()
+print("Operator (+, -, *, /):")
+op = input().strip()
+print("Voer tweede getal in (Chinees):")
+b_ch = input().strip()
+uitkomst = bereken(op, a_ch, b_ch)
+print("Uitkomst in Chinees:", uitkomst)
